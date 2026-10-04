@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ASAA Level I Mock Exam #1</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#1b2430;--muted:#5d6b7c;--line:#d7dde5;--acc:#1f5fbf;--ok:#1e8e3e;--okbg:#e6f4ea;--bad:#c5221f;--badbg:#fce8e6}
+@media (prefers-color-scheme:dark){:root{--bg:#11161d;--card:#1a212b;--ink:#e8edf3;--muted:#9aa7b6;--line:#2c3644;--acc:#5b9cff;--ok:#5bd17a;--okbg:#17321f;--bad:#ff7b72;--badbg:#3a1a1a}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px calc(28px + env(safe-area-inset-bottom))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+h1{font-size:1.45rem;margin:0 0 8px}h2{font-size:1.2rem;margin:0 0 10px}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+label{display:block;font-weight:600;margin:18px 0 6px}
+input[type=text]{width:100%;font-size:17px;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.btn{display:block;width:100%;font-size:1.05rem;font-weight:600;padding:15px;margin-top:14px;border:0;border-radius:12px;background:var(--acc);color:#fff;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--acc);border:1.5px solid var(--acc)}
+.btn:disabled{opacity:.45}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;font-size:.92rem;color:var(--muted)}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden;margin-bottom:14px}.bar>i{display:block;height:100%;background:var(--acc);width:0;transition:width .25s}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bg);border:1px solid var(--line);color:var(--muted);margin-bottom:8px}
+.qtext{font-size:1.1rem;font-weight:600;margin:0 0 14px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;font-size:1rem;padding:14px;margin:0 0 10px;min-height:56px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer}
+.opt b{flex:0 0 32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg);border:1px solid var(--line)}
+.opt:not(:disabled):active{transform:scale(.99)}
+.opt.ok{border-color:var(--ok);background:var(--okbg)}.opt.ok b{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--badbg)}.opt.bad b{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt:disabled{cursor:default;opacity:1}
+.fb{border-radius:12px;padding:14px;margin-top:6px;border-left:5px solid}
+.fb.ok{background:var(--okbg);border-color:var(--ok)}.fb.bad{background:var(--badbg);border-color:var(--bad)}
+.fb .head{font-weight:700;margin-bottom:4px}.fb .cite{margin-top:8px;font-size:.88rem;color:var(--muted)}
+.big{font-size:2.6rem;font-weight:800;margin:6px 0}
+.verdict{display:inline-block;font-weight:800;font-size:1.2rem;padding:6px 16px;border-radius:10px;color:#fff}
+.verdict.pass{background:var(--ok)}.verdict.fail{background:var(--bad)}
+.miss{border-top:1px solid var(--line);padding:12px 0}.miss:first-child{border-top:0}
+.miss .a{margin-top:4px}.hidden{display:none}
+.linkbtn{background:none;border:0;color:var(--acc);font-size:.9rem;padding:4px 0;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="start" class="card hidden">
+    <h1>ASAA Level I Mock Exam #1</h1>
+    <p class="muted">50 questions, 70% (35) to pass, based on the ASAA Level I Student Manual</p>
+    <p class="small muted">One question at a time. Tap an answer to lock it in and see the explanation with the manual page. Progress saves on this device, so you can close the page and pick up where you left off.</p>
+    <label for="name">Your name (optional)</label>
+    <input id="name" type="text" autocomplete="name" placeholder="e.g. Sean">
+    <button class="btn" id="startBtn">Start</button>
+    <button class="btn secondary hidden" id="resumeBtn">Resume</button>
+  </div>
+
+  <div id="quiz" class="hidden">
+    <div class="top"><span id="prog"></span><span id="score"></span></div>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="card">
+      <span class="tag" id="ch"></span>
+      <p class="qtext" id="qtext"></p>
+      <div id="opts"></div>
+      <div id="fb" class="hidden"></div>
+      <button class="btn hidden" id="nextBtn">Next</button>
+    </div>
+    <p class="small muted" style="text-align:center"><button class="linkbtn" id="quitBtn">Start over</button></p>
+  </div>
+
+  <div id="end" class="card hidden">
+    <h2>Results<span id="endName"></span></h2>
+    <div class="big" id="endScore"></div>
+    <div id="endPct" class="muted"></div>
+    <p><span id="verdict" class="verdict"></span></p>
+    <p class="small muted">Passing is 35 of 50 (70%).</p>
+    <h2 style="margin-top:20px" id="missHead"></h2>
+    <div id="missList"></div>
+    <button class="btn" id="restartBtn">Restart</button>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+var Q = [{"n": 1, "ch": "Intro", "q": "According to the course disclaimers, what do all codes declare must also be followed to be in compliance?", "opts": ["The AHJ's verbal guidance only", "All manufacturer's instructions", "The company employee handbook", "The ASAA association bylaws"], "ans": "B", "expl": "Disclaimers slide: codes require that manufacturer's instructions also be followed.", "page": "p.9", "quote": "p.9: \"All codes declare that all manufacturer’s instructions must also be followed to be in compliance\""}, {"n": 2, "ch": "Ch.1", "q": "Which type of door contact is designed to prevent tampering and goes into alarm either when the switch and magnet separate OR when another magnet is added?", "opts": ["Mechanical plunger switch", "Standard surface contact", "Balanced contact", "Laced screen"], "ans": "C", "expl": "Balanced contact: used to prevent tampering; alarm on separation or addition of another magnet.", "page": "p.18", "quote": "p.18: \"Used to prevent tampering\" / p.18: \"Addition of another magnet\""}, {"n": 3, "ch": "Ch.1", "q": "Per the Backup Battery slide in the Industry Overview, a system should include standby power for a minimum of how long?", "opts": ["Four hours", "One hour", "24 hours", "60 hours"], "ans": "A", "expl": "Backup Battery slide: standby power for a minimum of four hours (24 h is the NFPA 72 fire requirement in Ch.6).", "page": "p.29", "quote": "p.29: \"Include standby power for a minimum of four hours\""}, {"n": 4, "ch": "Ch.1", "q": "A dual-technology motion detector combines PIR with microwave. When does it indicate an alarm?", "opts": ["When either technology trips", "Only when the PIR trips", "Only when the microwave trips", "Only when both technologies trip"], "ans": "D", "expl": "Dual-tech: alarm indicated only when both trip.", "page": "p.21", "quote": "p.21: \"PIR combined with Microwave\" / p.21: \"Alarm indicated only when both trip\""}, {"n": 5, "ch": "Ch.1", "q": "For a burglar alarm, the proper response is to call the site, then call a different number (usually a responsible party's cell phone) before requesting dispatch. What is this called?", "opts": ["Priority Dispatch Verification", "Enhanced Call Verification (ECV)", "Late-to-Close verification", "Dual Signal Confirmation"], "ans": "B", "expl": "Burglar alarm proper response is two-call verification, called Enhanced Call Verification.", "page": "p.32", "quote": "p.32: \"prior to requesting public safety dispatch (Enhanced Call Verification\""}, {"n": 6, "ch": "Ch.1", "q": "According to the manual, which type of system is NOT regulated in Arkansas (no license needed to install)?", "opts": ["Access control systems", "Burglar alarm systems", "Fire alarm systems", "Camera (CCTV) systems"], "ans": "A", "expl": "Access control systems are not regulated in Arkansas; NFPA 72 must still be consulted for fire code restrictions.", "page": "p.40", "quote": "p.40: \"Not regulated in Arkansas (do not need a license to install\""}, {"n": 7, "ch": "Ch.2", "q": "An alarm company has 4,000 systems installed and had 2,000 false dispatches this year. Using the manual's definition, what is its False Alarm Factor?", "opts": ["2.0", "5.0", "0.5", "0.05"], "ans": "C", "expl": "False Alarm Factor = false dispatches ÷ systems installed = 2,000 ÷ 4,000 = 0.5.", "page": "p.46, p.47", "quote": "p.46: \"Number of false dispatches divided by the number of systems installed.\" / p.47: \"False Alarm Factor is .495 alarms per system\""}, {"n": 8, "ch": "Ch.2", "q": "Which of the following is listed under Installer Ethics?", "opts": ["Leave final cleanup to the customer since it is their property", "Explain system operation only if the customer asks", "Comply with standards only when the AHJ will inspect", "Make sure you leave each home or business cleaner than you found it"], "ans": "D", "expl": "Installer Ethics slide lists leaving each site cleaner than you found it.", "page": "p.44", "quote": "p.44: \"Make sure you leave each home or business cleaner than you found it\""}, {"n": 9, "ch": "Ch.3", "q": "Which construction document gives detailed drawings of how a device or component will be installed?", "opts": ["Specifications", "Schedules", "Shop drawings", "Mechanical drawings"], "ans": "C", "expl": "Construction Documents slide: shop drawings show how a device/component will be installed (schedules = materials lists; specifications = job requirements).", "page": "p.51", "quote": "p.51: \"Shop Drawings * Detailed drawings of how a device or component will be installed\""}, {"n": 10, "ch": "Ch.4", "q": "Which agency enforces job-site safety standards, and which of its standards apply to our industry?", "opts": ["OSHA; standards 1926 & 1910", "NFPA; standards 70 & 72", "Arkansas State Police; standards 17-40 & 17-41", "CPSC; standards 1926 & 1910"], "ans": "A", "expl": "OSHA enforces safety standards; 1926 & 1910 apply to the industry.", "page": "p.54", "quote": "p.54: \"OSHA enforces safety standards\" / p.54: \"Standards 1926 & 1910 apply to our industry\""}, {"n": 11, "ch": "Ch.4", "q": "The NEC describes high voltage as anything over how many volts (work above this requires an electrician's license, except communications circuits)?", "opts": ["24 volts", "30 volts", "50 volts", "120 volts"], "ans": "B", "expl": "NEC: high voltage is over 30 volts; exception is communications circuits.", "page": "p.60", "quote": "p.60: \"NEC describes high voltage as being over 30 volts\""}, {"n": 12, "ch": "Ch.4", "q": "On a stepladder, what is the highest step you should ever climb to?", "opts": ["The top cap", "The first step from the top", "The third step from the top", "The second step from the top"], "ans": "D", "expl": "Never climb higher than second step from top on a stepladder (third from top on a straight ladder).", "page": "p.58", "quote": "p.58: \"Never climb higher than second step from top on a stepladder\""}, {"n": 13, "ch": "Ch.5", "q": "What fire code has the State of Arkansas adopted?", "opts": ["The 2021 Arkansas Fire Prevention Code, based on the 2021 IBC/IFC/IRC", "NFPA 731 as the state fire code", "The 2015 International Fire Code without amendments", "NFPA 1, 2018 edition"], "ans": "A", "expl": "State Adopted Code slide: Arkansas Fire Prevention Code, 2021 edition, based on the 2021 IBC, IFC, IRC and IEBC.", "page": "p.66", "quote": "p.66: \"2021 edition\" / p.66: \"International Building Code\" / p.66: \"International Fire Code\""}, {"n": 14, "ch": "Ch.5", "q": "In codes and standards, what does the word \"shall\" mean?", "opts": ["It is recommended but not required", "It is optional if the customer agrees", "It is mandatory", "It applies only to new construction"], "ans": "C", "expl": "\"Shall\" = mandatory; \"should\" = recommended but not required.", "page": "p.71", "quote": "p.71: \"means it is mandatory\""}, {"n": 15, "ch": "Ch.5", "q": "Which agency can revoke or suspend an alarm license/registration in Arkansas, and what is the maximum fine per violation?", "opts": ["State Fire Marshal; up to $500 per violation", "Arkansas State Police; up to $1,000 per violation", "Arkansas Department of Labor; up to $1,000 per year", "ASAA; up to $5,000 per violation"], "ans": "B", "expl": "Possible Disciplinary Actions: Arkansas State Police may revoke, suspend, reprimand, deny, or fine up to $1000 for each violation.", "page": "p.75", "quote": "p.75: \"Arkansas State Police may revoke, suspend,\" / p.75: \"fine up to $1000 for each violation\""}, {"n": 16, "ch": "Ch.6", "q": "Which type of circuit is most commonly wired in SERIES?", "opts": ["Fire circuits (zones)", "Robbery circuits", "Annunciation circuits", "Burglary circuits (zones)"], "ans": "D", "expl": "Types of Circuits: burglary zones are series; robbery, fire, supervisory, power and annunciation are parallel.", "page": "p.80", "quote": "p.80: \"Burglary circuits (zones) — Series\""}, {"n": 17, "ch": "Ch.6", "q": "A resistor has bands brown, black, red and silver. What are its value and tolerance range?", "opts": ["1,000 Ω; 900 to 1,100 Ω", "100 Ω; 90 to 110 Ω", "10,000 Ω; 9,000 to 11,000 Ω", "1,000 Ω; 950 to 1,050 Ω"], "ans": "A", "expl": "Brown=1, black=0, red multiplier=00, so 1,000 Ω. Silver = 10%, so 900–1,100 Ω.", "page": "p.88, p.89", "quote": "p.88: \"value would be 1,000 (1K) Ohms\" / p.89: \"could vary from 900 to 1100 Ohms\" / p.89: \"silver 10%\""}, {"n": 18, "ch": "Ch.6", "q": "Using Ohm's law, what is the resistance of a circuit with 24 V applied and 2 A flowing?", "opts": ["48 Ω", "0.083 Ω", "12 Ω", "26 Ω"], "ans": "C", "expl": "R = E ÷ I = 24 ÷ 2 = 12 Ω.", "page": "p.82, p.81", "quote": "p.82: \"=E+1=2?0Ohms\" / p.81: \"Can be used to find an unknown value.\""}, {"n": 19, "ch": "Ch.6", "q": "A 12 V siren draws 0.75 A. How much power does it use?", "opts": ["16 watts", "9 watts", "0.0625 watts", "12.75 watts"], "ans": "B", "expl": "Power (W/VA) = volts × amps = 12 × 0.75 = 9 W.", "page": "p.83", "quote": "p.83: \"multiplying Volts times Amps\""}, {"n": 20, "ch": "Ch.6", "q": "A fire panel draws 0.25 A in standby and 1.5 A in alarm. Following the manual's NFPA 72 method (24 h standby, then 5 min alarm, times the 1.2 derating factor), how many amp-hours of battery are required?", "opts": ["6.125 Ah", "42.0 Ah", "9.0 Ah", "7.35 Ah"], "ans": "D", "expl": "(0.25 A × 24 h) + (1.5 A × 0.0833 h) = 6 + 0.125 = 6.125 Ah; × 1.2 = 7.35 Ah.", "page": "p.93, p.94", "quote": "p.93: \"NFPA 72 requires 24 hours* of standby battery on all fire systems\" / p.94: \"then sound the alarm for 5 minutes.\" / p.94: \"9.355 Ah x 1.2\""}, {"n": 21, "ch": "Ch.7", "q": "An IPv4 address is written as four numbers separated by periods. What range can each number be?", "opts": ["0 to 99", "1 to 256", "0 to 255", "0 to 999"], "ans": "C", "expl": "IP Address Format: 32-bit address, four numbers, each zero to 255.", "page": "p.104", "quote": "p.104: \"Each number can be zero to 255.\""}, {"n": 22, "ch": "Ch.7", "q": "Which network device acts as a junction between two networks to transfer data packets between them?", "opts": ["Switch", "Router", "Firewall", "Cable modem"], "ans": "B", "expl": "Switch vs Router: a switch forms a LAN; a router is the junction between two networks.", "page": "p.101", "quote": "p.101: \"Router acts as a junction between two networks to transfer data packets among them.\""}, {"n": 23, "ch": "Ch.8", "q": "Which type of meter is best for detecting \"swingers\" (intermittent problems)?", "opts": ["Analog meter", "Digital meter", "Lineman's test set", "Smart stud finder"], "ans": "A", "expl": "Digital is more durable and forgiving; analog is best for detecting swingers.", "page": "p.111", "quote": "p.111: \"Analog is best for detecting “swingers”\""}, {"n": 24, "ch": "Ch.9", "q": "A PIR motion detector responds best to which kind of movement?", "opts": ["Walking straight toward the unit", "Walking straight away from the unit", "Very slow movement directly under the unit", "Crossing (\"crosswalk\") through the detection pattern"], "ans": "D", "expl": "PIRs react to crosswalk, not to walking toward or away from the unit.", "page": "p.123", "quote": "p.123: \"PIRs react to “crosswalk”, not walking toward and away from the unit.\""}, {"n": 25, "ch": "Ch.9", "q": "When walk-testing motion detectors, what is the most steps you should be able to take in the detection area without being detected?", "opts": ["Two", "Four", "Six", "Ten"], "ans": "B", "expl": "Testing Motion Detectors: you should not be able to take more than four steps without being seen.", "page": "p.126", "quote": "p.126: \"should not be able to take more than four (4) steps in the detection area\""}, {"n": 26, "ch": "Ch.9", "q": "According to Contact Location Considerations, what are the primary causes of false alarms with door and window contacts?", "opts": ["Low wireless batteries and RF interference", "Undersized zone wire and long runs", "Poorly fitting doors or windows and improper installation", "Improper keypad programming"], "ans": "C", "expl": "Poorly fitting doors/windows and improper installation are the primary causes of false alarms.", "page": "p.127", "quote": "p.127: \"Poorly fitting doors or windows and improper installation are the primary causes of false alarms.\""}, {"n": 27, "ch": "Ch.9", "q": "How close to an HVAC supply register (or the door to a kitchen or a bathroom with a tub/shower) may a smoke detector be installed?", "opts": ["No closer than 3 ft", "No closer than 12 inches", "No closer than 1 ft", "No closer than 10 ft"], "ans": "A", "expl": "Smoke Detector Locations: no closer than 3 ft from a kitchen door, a bathroom door with tub/shower, or a supply register.", "page": "p.132", "quote": "p.132: \"No closer than 3 ft from\" / p.132: \"Supply register\""}, {"n": 28, "ch": "Ch.9", "q": "Residential fire notification appliances must be clearly audible with all intervening doors closed. What sound level at the pillow is required?", "opts": ["45 dB", "65 dB", "105 dB", "75 dB"], "ans": "D", "expl": "Fire Notification Appliances: 75 dB at the pillow.", "page": "p.135", "quote": "p.135: \"75db at the pillow\""}, {"n": 29, "ch": "Ch.9", "q": "NFPA 72 requires access control doors to unlock when a fire signal is received, or within how long after the fire alarm system loses power?", "opts": ["30 seconds", "10 minutes", "5 minutes", "24 hours"], "ans": "B", "expl": "Access Control & Fire Systems: unlock on fire signal OR within 10 minutes of fire alarm system power loss.", "page": "p.139", "quote": "p.139: \"NFPA 72 requires access control doors to unlock upon receipt of a fire signal OR within 10 minutes of the loss of power to the fire alarm system.\""}, {"n": 30, "ch": "Ch.9", "q": "Which camera lens focal length gives the WIDEST angle of view?", "opts": ["4 mm", "75 mm", "25 mm", "50 mm"], "ans": "A", "expl": "Lens: the smaller the number (4 mm) the wider the angle; larger (75 mm) is more telephoto.", "page": "p.144", "quote": "p.144: \"The smaller the number (4mm) the wider angle.\""}, {"n": 31, "ch": "Ch.9", "q": "Which of these wire gauges is the THICKEST conductor?", "opts": ["18 AWG", "22 AWG", "12 AWG", "24 AWG"], "ans": "C", "expl": "AWG: the lower the number, the thicker the wire.", "page": "p.155", "quote": "p.155: \"Lower the number the thicker the wire\""}, {"n": 32, "ch": "Ch.10", "q": "Wireless RF signals will penetrate wood, concrete and stone, but NOT which material?", "opts": ["Drywall", "Glass", "Brick", "Metal"], "ans": "D", "expl": "Typical Range: RF penetrates wood, concrete and stone, but not metal.", "page": "p.165", "quote": "p.165: \"RF signals will penetrate wood, concrete and stone, but not metal\""}, {"n": 33, "ch": "Ch.11", "q": "On a supervised circuit, where should the end-of-line device be installed?", "opts": ["Inside the control panel at the zone terminals", "After the last device on the circuit", "At the first device on the circuit", "Midway along the circuit on a \"T\" tap"], "ans": "B", "expl": "Supervision: the panel is NOT end of line; put the EOL device after the last device (no T taps).", "page": "p.174, p.173", "quote": "p.174: \"Put the end of line device after the last device\" / p.173: \"No”“T” taps\""}, {"n": 34, "ch": "Ch.11", "q": "If you drill a hole through a fire stop, what must you do?", "opts": ["Seal it with an approved sealant", "Leave it open so the attic can vent", "Stuff it with fiberglass insulation", "Cover it with a drywall patch on one side only"], "ans": "A", "expl": "Seal All Penetrations: drilling a hole breaks the fire stop; seal it with an approved sealant.", "page": "p.184", "quote": "p.184: \"If you drilla hole you break the fire stop.\" / p.184: \"Seal it with an approved sealant\""}, {"n": 35, "ch": "Ch.11", "q": "What is the purpose of a service loop?", "opts": ["To provide end-of-line supervision for the zone", "To reduce induction between pairs in the same cable", "To leave enough cable to remove or replace the device and eliminate strain on the cable and connectors", "To add resistance so the zone balances"], "ans": "C", "expl": "Service Loops: allow enough cable to remove the device for service, replace it, and eliminate strain.", "page": "p.172", "quote": "p.172: \"Remove the device for service or adjustment\" / p.172: \"Eliminate any strain on the cable and connectors\""}, {"n": 36, "ch": "Ch.12", "q": "What does a properly wired RJ31-X allow the alarm equipment to do?", "opts": ["Share the line with a fax machine at equal priority", "Use the second pair as a backup phone line", "Convert the phone line to VoIP", "Take priority over the phone lines when alarm signals need to be sent"], "ans": "D", "expl": "RJ31-X: FCC-approved dividing line; when properly wired it gives the alarm priority over the phone lines.", "page": "p.193", "quote": "p.193: \"allows the alarm equipment to take priority over the phone lines when alarm signals need to be sent.\""}, {"n": 37, "ch": "Ch.12", "q": "With the RJ31-X jack in place, what DC voltage should you read on an idle (on-hook) phone line?", "opts": ["48 to 52 volts DC", "7 to 9 volts DC", "12 to 14 volts DC", "110 to 120 volts DC"], "ans": "A", "expl": "SNI Points to Remember: with the RJ31X in place, the line should read 48 to 52 VDC (7–9 VDC is off-hook, p.224).", "page": "p.195", "quote": "p.195: \"With RJ31X jack in place voltage should read 48 to 52 volts DC\""}, {"n": 38, "ch": "Ch.12", "q": "Which communication format uses DTMF (touch tones)?", "opts": ["SIA", "DMP", "Contact I.D.", "Modem IV"], "ans": "C", "expl": "Contact I.D. uses DTMF; SIA uses BFSK; DMP uses SDLC; Modem IV is proprietary to Bosch.", "page": "p.198", "quote": "p.198: \"Contact I.D. — Uses DTMF (touch tones)\""}, {"n": 39, "ch": "Ch.12", "q": "Per U.L., what must alarm systems use to reach the receiver over a network?", "opts": ["DNS names, not IP addresses", "IP addresses, not DNS names", "Either one, provided the DNS is verified yearly", "Only MAC addresses"], "ans": "B", "expl": "Network Communicators: alarm systems must use IP addresses, not DNS, per U.L.", "page": "p.202", "quote": "p.202: \"Alarm systems must use IP addresses, not DNS\""}, {"n": 40, "ch": "Ch.13", "q": "The SIA CP-01 standard sets the minimum default for the abort window. What is it?", "opts": ["15 seconds", "45 seconds", "60 seconds", "30 seconds"], "ans": "D", "expl": "Abort Window: all panels should be set to at least the SIA CP-01 default of 30 seconds.", "page": "p.219", "quote": "p.219: \"All panels should be setto at least the default of 30 seconds\""}, {"n": 41, "ch": "Ch.13", "q": "Per SIA CP-01, what should swinger shutdown be set to?", "opts": ["1 trip", "2 trips", "3 trips", "6 trips"], "ans": "A", "expl": "Swinger Shutdown: all panels should be set to the SIA CP-01 default of 1.", "page": "p.220", "quote": "p.220: \"All panels should be set to the default of 1 established by the SIA CP-\""}, {"n": 42, "ch": "Ch.13", "q": "A zone is instant if it is violated first, but follows the entry delay if an entry/exit zone trips first. What zone type is this?", "opts": ["24 Hour", "Day zone", "Follower", "Instant"], "ans": "C", "expl": "Follower zone: instant if violated first; follows delay if entry/exit trips first.", "page": "p.217", "quote": "p.217: \"Instant if violated first, follows delay if entry/exit zone trips first\""}, {"n": 43, "ch": "Ch.14", "q": "When measuring amperage with a meter, how should the leads be placed?", "opts": ["In parallel with what you are measuring", "In series with what you are measuring", "Across the battery with the panel still connected", "Between one conductor and earth ground"], "ans": "B", "expl": "Measure Amperage: leads in SERIES. Voltage and resistance: leads in PARALLEL.", "page": "p.223", "quote": "p.223: \"Place leads in SERIES with what you are measuring\""}, {"n": 44, "ch": "Ch.14", "q": "Erratic or intermittent problems (\"swingers\") are almost always caused by what?", "opts": ["A failed power supply", "Undersized wire on long runs", "Incorrect communication format", "Bad connections, such as cold solder joints or connectors that need cleaning and reseating"], "ans": "D", "expl": "Swingers: almost always bad connections. Total failure (no functions) usually points to the power supply.", "page": "p.227", "quote": "p.227: \"are almost always due to bad connections\""}, {"n": 45, "ch": "Ch.14", "q": "Which readings are signs of an OPEN circuit?", "opts": ["Infinite resistance and zero amperage", "Low voltage and high amperage", "Blown fuses and increased heat", "Tripped GFCIs and shocks"], "ans": "A", "expl": "Signs of Open Circuits: infinite resistance, zero amperage, inoperable device (low V/high A are short-circuit signs).", "page": "p.229", "quote": "p.229: \"Infinite resistance\" / p.229: \"Zero Amperage\""}, {"n": 46, "ch": "Ch.15", "q": "As part of false alarm prevention training, who does the manual say should be trained?", "opts": ["Only the person who signed the contract", "Only the primary contact on the call list", "Anyone with a key", "Only adult occupants who work from home"], "ans": "C", "expl": "False Alarm Prevention (training): stress that anyone with a key be trained.", "page": "p.242", "quote": "p.242: \"Stress that anyone with a key be trained\""}, {"n": 47, "ch": "Ch.16", "q": "For new commercial fire systems, additions and alterations, how many documents does NFPA 72 require to be submitted for review and approval?", "opts": ["7", "17", "12", "24"], "ans": "B", "expl": "Commercial Fire Systems: NFPA 72 requires 17 documents.", "page": "p.246", "quote": "p.246: \"NFPA 72 requires 17 documents be submitted for review and approval\""}, {"n": 48, "ch": "Ch.17", "q": "How does the manual define maintenance?", "opts": ["Restoring a system by replacing a part or putting together what is broken", "Replacing a system at the end of its warranty", "Reprogramming a panel after every false alarm", "Recurrent inspections, tests and corrections that keep the system and its parts in operative condition at all times"], "ans": "D", "expl": "Maintenance is a recurring check-up. The \"restore by replacing a part\" definition is for repair.", "page": "p.248, p.249", "quote": "p.248: \"Recurrent inspections, tests and corrections\" / p.249: \"To restore by replacing a part\""}, {"n": 49, "ch": "Homework", "q": "A 12 V source is connected across a 3.3 kΩ resistor. What is the current in the circuit?", "opts": ["About 3.6 mA (0.0036 A)", "About 39.6 A", "About 0.275 A", "About 36 mA"], "ans": "A", "expl": "I = E ÷ R = 12 V ÷ 3,300 Ω ≈ 0.00364 A ≈ 3.6 mA (kilo = 1,000).", "page": "p.252, p.84, p.82", "quote": "p.252: \"What is the current of the circuit above?\" / p.84: \"Kilo (K) - One thousand- 1000\" / p.82: \"=E+R=?Amps\""}, {"n": 50, "ch": "Homework", "q": "Convert 250 mA (milliamps) to amps.", "opts": ["2.5 A", "25 A", "0.25 A", "0.025 A"], "ans": "C", "expl": "Going from a prefix to the base unit, multiply by 0.001: 250 × 0.001 = 0.25 A (a quarter amp).", "page": "p.252, p.85, p.59", "quote": "p.252: \"250 mA (milli-Amps) = Amps\" / p.85: \"Answer: We would multiply by 0.001\" / p.59: \"1/4th of an Ampere\""}];
+var L = ["A","B","C","D"], PASS = 35, KEY = "asaa_l1_mock1_v1";
+var S = load() || fresh();
+function fresh(){ return {name:"", started:false, idx:0, answers:{}}; }
+function load(){ try { var s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s.idx==="number" && s.answers) return s; } catch(e){} return null; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function $(id){ return document.getElementById(id); }
+function el(tag, cls, text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+function correct(){ var c=0; for (var k in S.answers) if (S.answers[k]===Q[k].ans) c++; return c; }
+function answered(){ return Object.keys(S.answers).length; }
+function show(id){ ["start","quiz","end"].forEach(function(x){ $(x).classList.toggle("hidden", x!==id); }); window.scrollTo(0,0); }
+
+function renderStart(){
+  show("start");
+  $("name").value = S.name || "";
+  var inProgress = S.started && answered() > 0;
+  $("resumeBtn").classList.toggle("hidden", !inProgress);
+  if (inProgress) $("resumeBtn").textContent = "Resume at Question " + (S.idx+1) + " (" + correct() + " of " + answered() + " so far)";
+  $("startBtn").textContent = inProgress ? "Start over" : "Start";
+}
+
+function renderQ(){
+  if (S.idx >= Q.length) return renderEnd();
+  show("quiz");
+  var q = Q[S.idx], pick = S.answers[S.idx];
+  $("prog").textContent = "Question " + (S.idx+1) + " of " + Q.length;
+  $("score").textContent = "Score: " + correct() + " / " + answered();
+  $("barfill").style.width = (100*answered()/Q.length) + "%";
+  $("ch").textContent = q.ch;
+  $("qtext").textContent = q.n + ". " + q.q;
+  var box = $("opts"); box.innerHTML = "";
+  q.opts.forEach(function(t, i){
+    var b = el("button","opt"); b.type="button";
+    b.appendChild(el("b",null,L[i])); b.appendChild(el("span",null,t));
+    if (pick){ b.disabled = true;
+      if (L[i]===q.ans) b.classList.add("ok"); else if (L[i]===pick) b.classList.add("bad"); }
+    else b.addEventListener("click", function(){ choose(L[i]); });
+    box.appendChild(b);
+  });
+  var fb = $("fb");
+  if (pick){
+    var ok = pick===q.ans;
+    fb.className = "fb " + (ok?"ok":"bad"); fb.innerHTML = "";
+    fb.appendChild(el("div","head", ok ? "Correct" : "Incorrect. The answer is " + q.ans + ": " + q.opts[L.indexOf(q.ans)]));
+    fb.appendChild(el("div",null,q.expl));
+    fb.appendChild(el("div","cite","Manual: " + q.page));
+    $("nextBtn").classList.remove("hidden");
+    $("nextBtn").textContent = S.idx === Q.length-1 ? "See results" : "Next";
+  } else { fb.className="hidden"; $("nextBtn").classList.add("hidden"); }
+}
+
+function choose(letter){
+  if (S.answers[S.idx]) return;
+  S.answers[S.idx] = letter; save(); renderQ();
+  $("fb").scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+function renderEnd(){
+  show("end");
+  var c = correct(), pct = Math.round(100*c/Q.length);
+  $("endName").textContent = S.name ? " for " + S.name : "";
+  $("endScore").textContent = c + " / " + Q.length;
+  $("endPct").textContent = pct + "%";
+  var v = $("verdict"); v.textContent = c >= PASS ? "PASS" : "FAIL"; v.className = "verdict " + (c>=PASS?"pass":"fail");
+  var list = $("missList"); list.innerHTML = ""; var misses = 0;
+  Q.forEach(function(q,i){
+    var p = S.answers[i]; if (p === q.ans) return; misses++;
+    var d = el("div","miss");
+    d.appendChild(el("div",null,q.n + ". " + q.q));
+    d.appendChild(el("div","a small", "Your answer: " + (p ? p + ". " + q.opts[L.indexOf(p)] : "none")));
+    var a = el("div","a"); a.appendChild(el("strong",null,"Correct: " + q.ans + ". " + q.opts[L.indexOf(q.ans)])); d.appendChild(a);
+    d.appendChild(el("div","a small muted", q.expl + " (" + q.page + ")"));
+    list.appendChild(d);
+  });
+  $("missHead").textContent = misses ? "Missed questions (" + misses + ")" : "No misses. Perfect score.";
+}
+
+function begin(){ S = fresh(); S.name = $("name").value.trim(); S.started = true; save(); renderQ(); }
+$("startBtn").addEventListener("click", function(){
+  if (S.started && answered()>0 && !confirm("Start over and clear your saved progress?")) return; begin(); });
+$("resumeBtn").addEventListener("click", function(){ S.name = $("name").value.trim() || S.name; save(); renderQ(); });
+$("nextBtn").addEventListener("click", function(){ S.idx++; save(); renderQ(); });
+$("restartBtn").addEventListener("click", function(){ var n=S.name; S=fresh(); S.name=n; save(); renderStart(); });
+$("quitBtn").addEventListener("click", function(){ if (confirm("Clear your progress and go back to the start?")) { var n=S.name; S=fresh(); S.name=n; save(); renderStart(); } });
+
+if (S.started && S.idx >= Q.length) renderEnd();
+else if (S.started && answered() > 0) renderQ();
+else renderStart();
+})();
+</script>
+</body>
+</html>
